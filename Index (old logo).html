@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>BBL Business Syndicate</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f0f2f7;min-height:100vh;padding:10px;}
+input,select,textarea{width:100%;padding:12px 14px;border:1.5px solid #dde0e8;border-radius:8px;background:#fff;color:#1a1a2e;font-family:inherit;font-size:16px;transition:border-color .15s,box-shadow .15s;}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#185FA5;box-shadow:0 0 0 3px rgba(24,95,165,.12);}
+button{cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 20px;border-radius:8px;border:none;font-size:14px;font-weight:700;transition:opacity .15s,transform .1s;min-height:44px;}
+.btn:active{transform:scale(.97);}
+.btn-blue{background:#185FA5;color:#fff;}.btn-blue:hover{opacity:.85;}
+.btn-green{background:#27500A;color:#fff;}.btn-green:hover{opacity:.85;}
+.btn-red{background:#A32D2D;color:#fff;}.btn-red:hover{opacity:.85;}
+.btn-ghost{background:#fff;color:#444;border:1.5px solid #dde0e8;}.btn-ghost:hover{background:#f5f5f5;}
+.btn-orange{background:#D97706;color:#fff;}.btn-orange:hover{opacity:.85;}
+.btn-sm{padding:8px 16px;font-size:13px;min-height:40px;}
+.btn-lg{padding:14px 20px;font-size:16px;width:100%;border-radius:10px;min-height:48px;}
+.card{background:#fff;border-radius:14px;border:1.5px solid #e8eaf0;padding:16px 20px;box-shadow:0 2px 12px rgba(0,0,0,.06);}
+.grid2{display:grid;grid-template-columns:1fr;gap:13px;}
+.grid3{display:grid;grid-template-columns:1fr;gap:13px;}
+.span2{grid-column:1/-1;}
+.fl{font-size:13px;color:#555;display:block;margin-bottom:6px;font-weight:700;letter-spacing:.02em;}
+.badge{font-size:11px;padding:4px 10px;border-radius:99px;font-weight:700;}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;}
+.tab-bar{display:flex;gap:4px;padding:5px;border-radius:11px;background:#e4e6ee;margin-bottom:18px;}
+.tab-btn{flex:1;padding:12px 8px;font-size:14px;border-radius:8px;border:none;font-weight:600;transition:all .15s;min-height:44px;}
+.sec-card{border-radius:14px;overflow:hidden;margin-bottom:16px;}
+.sec-head{padding:16px 20px;display:flex;align-items:center;gap:12px;}
+.sec-ico{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.sec-body{padding:18px 20px;background:#fff;}
+.chk-label{display:inline-flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;padding:10px 14px;border-radius:8px;border:1.5px solid #dde0e8;background:#fff;font-weight:500;transition:all .12s;user-select:none;min-height:44px;}
+.chk-label:hover{border-color:#185FA5;background:#eef4fb;}
+.chk-label input[type=checkbox],.chk-label input[type=radio]{width:18px;height:18px;margin:0;cursor:pointer;}
+.chk-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.member-card{background:#fff;border:1.5px solid #e8eaf0;border-radius:13px;padding:18px 20px;display:flex;gap:15px;align-items:flex-start;margin-bottom:12px;transition:border-color .15s,box-shadow .15s;}
+.member-card:hover{border-color:#b0b8d0;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.stat-box{border-radius:13px;padding:20px;text-align:center;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:#fff;border-radius:13px;border:1.5px solid #e8eaf0;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.05);gap:12px;}
+#toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 20px;border-radius:10px;font-size:14px;font-weight:700;color:#fff;z-index:9999;display:none;box-shadow:0 4px 18px rgba(0,0,0,.2);max-width:90vw;text-align:center;}
+#fileInput{display:none;}
+.admin-member-card{background:#fff;border:1.5px solid #e8eaf0;border-radius:12px;padding:16px;margin-bottom:12px;transition:border-color .15s,box-shadow .15s;}
+.admin-member-card:hover{border-color:#b0b8d0;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.loading-screen{text-align:center;padding:5rem 1rem;}
+.loading-screen .spinner{width:40px;height:40px;border:4px solid #e8eaf0;border-top-color:#185FA5;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.config-warning{background:#FFF3CD;border:2px solid #F0AD00;border-radius:12px;padding:20px;margin:20px auto;max-width:500px;font-size:14px;color:#7A5100;line-height:1.6;}
+.config-warning h3{font-size:16px;font-weight:800;margin-bottom:10px;color:#5C3A00;}
+.config-warning code{background:#FFE5A0;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:12px;}
+@media(min-width:640px){body{padding:20px;}.card{padding:22px 26px;}.grid2{grid-template-columns:1fr 1fr;}.grid3{grid-template-columns:1fr 1fr 1fr;}.chk-row{justify-content:flex-start;}.stat-box{text-align:left;}.topbar{gap:16px;}}
+@media(min-width:768px){input,select,textarea{font-size:13px;padding:9px 12px;}.btn{font-size:13px;padding:10px 20px;min-height:auto;}.btn-sm{padding:6px 14px;font-size:12px;min-height:auto;}.btn-lg{padding:13px 20px;font-size:15px;min-height:auto;}.fl{font-size:12px;margin-bottom:5px;}.tab-btn{padding:9px 6px;font-size:13px;min-height:auto;}.chk-label{font-size:13px;padding:7px 13px;min-height:auto;}.chk-label input[type=checkbox],.chk-label input[type=radio]{width:15px;height:15px;}.sec-head{padding:14px 18px;}.sec-ico{width:38px;height:38px;font-size:19px;}.sec-body{padding:16px 18px;}.member-card{padding:15px 17px;gap:13px;margin-bottom:10px;}.topbar{padding:13px 18px;}#amobile{display:none!important;}#atable{display:block!important;}}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="root">
+  <div class="loading-screen">
+    <div class="spinner"></div>
+    <p style="color:#888;font-size:14px;font-weight:600;">Connecting to BBL Directory...</p>
+  </div>
+</div>
+<input type="file" id="fileInput" accept=".json" onchange="doImport()"/>
+
+<!-- ============================================================
+  Firebase SDK — Do NOT change these script tags
+============================================================ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<script>
+// ============================================================
+//  STEP 1 OF 1 — PASTE YOUR FIREBASE CONFIG BELOW
+//
+//  How to get it:
+//  1. Go to https://console.firebase.google.com
+//  2. Create a project (free) → click "Add app" → Web
+//  3. Copy the firebaseConfig object and paste it here
+//  4. In Firebase Console → Realtime Database → Create database
+//  5. In Rules tab, set: { "rules": { ".read": true, ".write": true } }
+//
+//  That's it! The directory will then work from any browser.
+// ============================================================
+var FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyB4u0G97X8XaJ5w7sNuq8D-xrCckPyLXH0",
+  authDomain:        "bbl-syndicate.firebaseapp.com",
+  databaseURL:       "https://bbl-syndicate-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  projectId:         "bbl-syndicate",
+  storageBucket:     "bbl-syndicate.firebasestorage.app",
+  messagingSenderId: "799143238862",
+  appId:             "1:799143238862:web:28a65276139391a87ac49f"
+};
+// ============================================================
+
+// Check if config has been filled in
+var CONFIG_READY = FIREBASE_CONFIG.apiKey !== 'YOUR_API_KEY';
+
+var db = {adminPass:'Admin@123',clubCode:'SHUTTLE250',members:{}};
+var DB_REF = null;
+var user = null;
+var screen = 'login';
+var tab = 'profile';
+var srch = '';
+var asrch = '';
+var lastSaved = null;
+
+var PAL=[
+  {bg:'#E6F1FB',bdr:'#185FA5',txt:'#0C447C'},
+  {bg:'#EAF3DE',bdr:'#3B6D11',txt:'#27500A'},
+  {bg:'#FAEEDA',bdr:'#854F0B',txt:'#633806'},
+  {bg:'#EEEDFE',bdr:'#534AB7',txt:'#3C3489'},
+  {bg:'#FAECE7',bdr:'#993C1D',txt:'#712B13'}
+];
+
+var SECS=[
+  {hbg:'#E6F1FB',hbdr:'#B5D4F4',htxt:'#0C447C',ibg:'#185FA5',ico:'&#128100;',title:'Personal details',sub:'Contact &amp; location info'},
+  {hbg:'#EAF3DE',hbdr:'#C0DD97',htxt:'#27500A',ibg:'#3B6D11',ico:'&#127992;',title:'Badminton profile',sub:'Playing history &amp; preferences'},
+  {hbg:'#FAEEDA',hbdr:'#FAC775',htxt:'#633806',ibg:'#854F0B',ico:'&#128188;',title:'Professional details',sub:'Work, industry &amp; expertise'},
+  {hbg:'#EEEDFE',hbdr:'#CECBF6',htxt:'#3C3489',ibg:'#534AB7',ico:'&#128279;',title:'Connect &amp; availability',sub:'Contact preferences &amp; links'}
+];
+
+// ── Utilities ────────────────────────────────────────────────
+function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''}
+function initials(n){return(n||'?').split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2)||'?'}
+function gv(id){var el=document.getElementById(id);return el?el.value.trim():''}
+function pal(id){return PAL[(id||'a').charCodeAt(0)%5]}
+
+var _toastTimer;
+function toast(msg,type){
+  var el=document.getElementById('toast');
+  var colors={ok:'#27500A',err:'#A32D2D',warn:'#7A5500'};
+  var icons={ok:'&#10003;',err:'&#10005;',warn:'&#9888;'};
+  el.style.background=colors[type||'ok'];
+  el.innerHTML=(icons[type||'ok']||'')+'&nbsp;&nbsp;'+esc(msg);
+  el.style.display='block';
+  clearTimeout(_toastTimer);
+  _toastTimer=setTimeout(function(){el.style.display='none';},3200);
+}
+
+// ── Firebase data layer ──────────────────────────────────────
+async function dbLoad(){
+  try{
+    var snap=await DB_REF.once('value');
+    var val=snap.val();
+    if(val&&typeof val==='object')return val;
+  }catch(e){
+    console.error('Firebase load error:',e);
+    toast('Could not connect to database','err');
+  }
+  return{adminPass:'Admin@123',clubCode:'SHUTTLE250',members:{}};
+}
+
+async function dbSave(){
+  try{
+    await DB_REF.set(db);
+    lastSaved=new Date();
+    var el=document.getElementById('_lsv');
+    if(el)el.textContent='Saved '+lastSaved.toLocaleTimeString();
+    return true;
+  }catch(e){
+    toast('Save failed: '+(e.message||'network error'),'err');
+    return false;
+  }
+}
+
+// Refresh live counts without full re-render
+function refreshLiveCounts(){
+  var count=Object.keys(db.members||{}).length;
+  var withP=Object.values(db.members||{}).filter(function(m){return m.profile;}).length;
+  document.querySelectorAll('._mc_total').forEach(function(el){el.textContent=count;});
+  document.querySelectorAll('._mc_strip').forEach(function(el){el.textContent=count+' members';});
+  // Update admin stat boxes if visible
+  var tb=document.getElementById('atbody');
+  if(tb){
+    // Admin screen is open — re-render counts
+    var allEl=document.querySelectorAll('._stat_total');
+    var fillEl=document.querySelectorAll('._stat_fill');
+    var pendEl=document.querySelectorAll('._stat_pend');
+    allEl.forEach(function(el){el.textContent=count;});
+    fillEl.forEach(function(el){el.textContent=withP;});
+    pendEl.forEach(function(el){el.textContent=count-withP;});
+  }
+}
+
+// ── App initialisation ───────────────────────────────────────
+async function init(){
+  if(!CONFIG_READY){
+    document.getElementById('root').innerHTML=
+      '<div style="padding:20px;"><div class="config-warning">'+
+      '<h3>⚙️ Firebase Setup Required</h3>'+
+      '<p>To enable cross-browser access, open <code>index.html</code> in a text editor and replace the placeholder values in <code>FIREBASE_CONFIG</code> with your Firebase project credentials.</p>'+
+      '<p style="margin-top:10px;"><strong>Steps:</strong><br>'+
+      '1. Go to <a href="https://console.firebase.google.com" target="_blank" style="color:#185FA5;">console.firebase.google.com</a><br>'+
+      '2. Create a free project → Add Web App → copy config<br>'+
+      '3. Enable Realtime Database (set rules to allow read/write)<br>'+
+      '4. Paste the config into this file</p>'+
+      '</div></div>';
+    return;
+  }
+
+  try{
+    firebase.initializeApp(FIREBASE_CONFIG);
+    DB_REF=firebase.database().ref('bbl_syndicate');
+    db=await dbLoad();
+
+    // Live listener: update counts in real-time when any browser makes changes
+    DB_REF.on('value',function(snap){
+      var val=snap.val();
+      if(val&&typeof val==='object'){
+        // Only update if we're not mid-save (prevents flicker)
+        if(!_saving){
+          db=val;
+          refreshLiveCounts();
+          // If directory tab is open, refresh it too
+          if(screen==='dashboard'&&tab==='directory'){
+            updateDir();
+          }
+        }
+      }
+    });
+  }catch(e){
+    toast('Firebase connection failed. Check your config.','err');
+    console.error(e);
+  }
+
+  render();
+}
+
+var _saving=false;
+
+// ── Render ───────────────────────────────────────────────────
+function render(){
+  var r=document.getElementById('root');
+  if(!r)return;
+  var map={login:tLogin,register:tRegister,dashboard:tDash,admin:tAdmin};
+  r.innerHTML=(map[screen]||tLogin)();
+}
+
+// ── Shared UI pieces ─────────────────────────────────────────
+function savedStrip(){
+  var sv=lastSaved?'Saved '+lastSaved.toLocaleTimeString():'Connected';
+  var memberCount=Object.keys(db.members||{}).length;
+  return '<div style="background:#EAF3DE;border:1.5px solid #C0DD97;border-radius:9px;padding:7px 14px;font-size:12px;font-weight:700;color:#27500A;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">'+
+    '<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">'+
+    '<span>&#9729; Cloud Connected</span>'+
+    '<span class="_mc_strip" style="color:#555;">'+memberCount+' members</span>'+
+    '</div>'+
+    '<span id="_lsv">'+sv+'</span>'+
+    '</div>';
+}
+
+function logoHdr(sub){
+  return '<div style="text-align:center;padding:20px 0 18px;">'+
+    '<div style="width:80px;height:60px;background:linear-gradient(135deg,#185FA5,#27500A);border-radius:12px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;box-shadow:0 4px 12px rgba(0,0,0,0.15);">'+
+    '<span style="color:white;font-weight:900;font-size:24px;font-family:Arial,sans-serif;">BBL</span></div>'+
+    '<p style="font-size:10px;letter-spacing:.1em;color:#aaa;margin:0 0 3px;text-transform:uppercase;font-weight:700;">Baroda Badminton League</p>'+
+    '<h1 style="font-size:24px;font-weight:900;margin:0 0 5px;color:#1a1a2e;">BBL Business Syndicate</h1>'+
+    '<p style="font-size:13px;color:#888;margin:0;">'+sub+'</p></div>';
+}
+
+// ── Login screen ─────────────────────────────────────────────
+function tLogin(){
+  return '<div style="max-width:400px;margin:0 auto;padding:1rem 0 2rem;">'+
+    logoHdr('Member Directory &mdash; Sign In')+
+    savedStrip()+
+    '<div class="card">'+
+    '<div style="margin-bottom:14px;"><label class="fl">Member ID</label>'+
+    '<input id="lid" placeholder="Enter your member ID" onkeydown="if(event.key===\'Enter\')doLogin()"/></div>'+
+    '<div style="margin-bottom:22px;"><label class="fl">Password</label>'+
+    '<input id="lpass" type="password" placeholder="Enter your password" onkeydown="if(event.key===\'Enter\')doLogin()"/></div>'+
+    '<button class="btn btn-blue btn-lg" onclick="doLogin()">Sign In</button></div>'+
+    '<p style="text-align:center;font-size:13px;margin-top:14px;color:#888;">New member? '+
+    '<a href="#" onclick="screen=\'register\';render();return false;" style="color:#185FA5;font-weight:700;">Create account</a></p></div>';
+}
+
+// ── Register screen ──────────────────────────────────────────
+function tRegister(){
+  return '<div style="max-width:400px;margin:0 auto;padding:1rem 0 2rem;">'+
+    logoHdr('Create Your Member Account')+savedStrip()+
+    '<div class="card"><div style="display:grid;gap:13px;">'+
+    '<div><label class="fl">Full Name *</label><input id="rname" placeholder="Your full name"/></div>'+
+    '<div><label class="fl">Member ID * <span style="font-weight:400;color:#bbb;">(no spaces, eg. rajesh.mehta)</span></label><input id="rid" placeholder="Choose a unique ID"/></div>'+
+    '<div><label class="fl">Password * <span style="font-weight:400;color:#bbb;">(minimum 6 characters)</span></label><input id="rpass" type="password" placeholder="Choose a secure password"/></div>'+
+    '<div><label class="fl">Club Registration Code *</label><input id="rcode" placeholder="Get this code from your admin"/></div>'+
+    '<button class="btn btn-blue btn-lg" style="margin-top:4px;" onclick="doRegister()">Create Account</button>'+
+    '</div></div>'+
+    '<p style="text-align:center;font-size:13px;margin-top:14px;color:#888;">Already registered? '+
+    '<a href="#" onclick="screen=\'login\';render();return false;" style="color:#185FA5;font-weight:700;">Sign in</a></p></div>';
+}
+
+// ── Login / register actions ─────────────────────────────────
+function doLogin(){
+  var id=gv('lid'),pass=gv('lpass');
+  if(!id||!pass)return toast('Please enter both ID and password','err');
+  if(id==='admin'&&pass===db.adminPass){
+    user={id:'admin',name:'Administrator',isAdmin:true};
+    screen='admin';render();return;
+  }
+  var mem=db.members[id];
+  if(!mem||mem.password!==pass)return toast('Invalid member ID or password','err');
+  user={id:id,name:mem.name,isAdmin:false};
+  screen='dashboard';render();
+  toast('Welcome back, '+mem.name+'!');
+}
+
+async function doRegister(){
+  var name=gv('rname'),id=gv('rid'),pass=gv('rpass'),code=gv('rcode');
+  if(!name||!id||!pass||!code)return toast('Please fill all required fields','err');
+  if(pass.length<6)return toast('Password must be at least 6 characters','err');
+  if(code!==db.clubCode)return toast('Invalid registration code','err');
+  if(db.members[id])return toast('This member ID is already taken','err');
+  if(!/^[a-z0-9._-]+$/.test(id))return toast('Member ID can only contain lowercase letters, numbers, dots, hyphens','err');
+  db.members[id]={name:name,password:pass,joinedAt:new Date().toISOString(),profile:null};
+  _saving=true;
+  if(await dbSave()){
+    _saving=false;
+    user={id:id,name:name,isAdmin:false};
+    screen='dashboard';
+    tab='profile';
+    render();
+    toast('Welcome '+name+'! Please fill in your profile below.');
+  }else{_saving=false;}
+}
+
+// ── Dashboard ────────────────────────────────────────────────
+function tDash(){
+  var mem=db.members[user.id];
+  var p=mem.profile;
+  var profileStatus=p?'Profile completed &#10003;':'Profile not filled yet';
+  return '<div style="max-width:730px;margin:0 auto;padding:1rem 0 3rem;">'+
+    '<div class="topbar">'+
+    '<div style="display:flex;align-items:center;gap:13px;">'+
+    '<div style="width:80px;height:60px;background:linear-gradient(135deg,#185FA5,#27500A);border-radius:8px;display:flex;align-items:center;justify-content:center;">'+
+    '<span style="color:white;font-weight:900;font-size:16px;font-family:Arial,sans-serif;">BBL</span></div>'+
+    '<div><p style="font-size:15px;font-weight:800;color:#1a1a2e;">'+esc(user.name)+'</p>'+
+    '<p style="font-size:11px;color:#aaa;margin-top:1px;">'+profileStatus+'</p></div></div>'+
+    '<button class="btn btn-ghost btn-sm" onclick="screen=\'login\';user=null;render();">Sign Out</button></div>'+
+    savedStrip()+
+    '<div class="tab-bar">'+
+    '<button class="tab-btn" style="background:'+(tab==='profile'?'#fff':'transparent')+';color:'+(tab==='profile'?'#185FA5':'#666')+';box-shadow:'+(tab==='profile'?'0 1px 5px rgba(0,0,0,.1)':'none')+';" onclick="tab=\'profile\';render()">My Profile</button>'+
+    '<button class="tab-btn" style="background:'+(tab==='directory'?'#fff':'transparent')+';color:'+(tab==='directory'?'#185FA5':'#666')+';box-shadow:'+(tab==='directory'?'0 1px 5px rgba(0,0,0,.1)':'none')+';" onclick="tab=\'directory\';render()">Member Directory</button>'+
+    '</div>'+
+    (tab==='profile'?tForm(p):tDir())+
+    '</div>';
+}
+
+// ── Profile form ─────────────────────────────────────────────
+function secCard(i,body){
+  var s=SECS[i];
+  return '<div class="sec-card" style="border:2px solid '+s.hbdr+';">'+
+    '<div class="sec-head" style="background:'+s.hbg+';border-bottom:2px solid '+s.hbdr+';">'+
+    '<div class="sec-ico" style="background:'+s.ibg+';">'+s.ico+'</div>'+
+    '<div><div style="font-size:14px;font-weight:800;color:'+s.htxt+';">'+s.title+'</div>'+
+    '<div style="font-size:12px;color:'+s.htxt+';opacity:.75;margin-top:1px;">'+s.sub+'</div></div></div>'+
+    '<div class="sec-body">'+body+'</div></div>';
+}
+
+function makeOpts(list,fieldVal){
+  return list.map(function(o){return '<option'+(fieldVal===o?' selected':'')+'>'+esc(o)+'</option>';}).join('');
+}
+
+function tForm(p){
+  function v(f){return p?esc(p[f]||''):'';}
+  function chk(f,o){return p&&p[f]&&p[f].indexOf(o)>=0?' checked':'';}
+  var times=['Morning weekdays','Evening weekdays','Morning weekends','Evening weekends'];
+  var timeChks=times.map(function(t){return '<label class="chk-label"><input type="checkbox" class="ptc" value="'+t+'"'+chk('pt',t)+'/>'+t+'</label>';}).join('');
+  var cpOpts=['WhatsApp','Email','Phone Call','Any'].map(function(o){return '<label class="chk-label" style="flex:1;min-width:100px;justify-content:center;"><input type="radio" name="p_cp" value="'+o+'"'+(p&&p.cp===o?' checked':'')+'/> '+o+'</label>';}).join('');
+  var sec0='<div class="grid2">'+
+    '<div class="span2"><label class="fl">Full name *</label><input id="p_fn" value="'+v('fn')+'" placeholder="Your full name"/></div>'+
+    '<div><label class="fl">Age group</label><select id="p_ag"><option value="">Select</option>'+makeOpts(['30–40','40–50','50–60','60+'],p&&p.ag)+'</select></div>'+
+    '<div><label class="fl">Area / locality</label><input id="p_loc" value="'+v('loc')+'" placeholder="Eg. Alkapuri, Vadodara"/></div>'+
+    '<div><label class="fl">Mobile *</label><input id="p_mob" type="tel" value="'+v('mob')+'" placeholder="+91 98765 43210"/></div>'+
+    '<div><label class="fl">Email</label><input id="p_eml" type="email" value="'+v('eml')+'" placeholder="your@email.com"/></div>'+
+    '<div class="span2"><label class="fl">WhatsApp <span style="font-weight:400;color:#bbb;">(if different from mobile)</span></label><input id="p_wa" type="tel" value="'+v('wa')+'" placeholder="Leave blank if same as mobile"/></div>'+
+    '</div>';
+  var sec1='<div class="grid2">'+
+    '<div><label class="fl">Playing since</label><select id="p_yp"><option value="">Select</option>'+makeOpts(['Less than 1 year','1–3 years','3–5 years','5–10 years','10+ years'],p&&p.yp)+'</select></div>'+
+    '<div><label class="fl">Skill level</label><select id="p_sl"><option value="">Select</option>'+makeOpts(['Beginner','Intermediate','Advanced','Competitive'],p&&p.sl)+'</select></div>'+
+    '<div><label class="fl">Play frequency</label><select id="p_pf"><option value="">Select</option>'+makeOpts(['Daily','4–5 days/week','2–3 days/week','Weekends only','Occasional'],p&&p.pf)+'</select></div>'+
+    '<div><label class="fl">Home court / club</label><input id="p_hc" value="'+v('hc')+'" placeholder="Eg. BBL Court, YMCA"/></div>'+
+    '<div class="span2"><label class="fl">Preferred playing time <span style="font-weight:400;color:#bbb;">(check all that apply)</span></label><div class="chk-row">'+timeChks+'</div></div>'+
+    '</div>';
+  var sec2='<div class="grid2">'+
+    '<div><label class="fl">Profession type</label><select id="p_pty"><option value="">Select</option>'+makeOpts(['Salaried / Job','Business Owner','Self-Employed / Consultant','Professional (CA / Doctor / Lawyer etc.)','Retired'],p&&p.pty)+'</select></div>'+
+    '<div><label class="fl">Industry / sector</label><select id="p_ind"><option value="">Select</option>'+makeOpts(['Banking & Finance','Healthcare & Pharma','IT & Technology','Manufacturing','Real Estate','Legal','Education','Retail & FMCG','Consulting','Media & Entertainment','Hospitality','Government / PSU','Other'],p&&p.ind)+'</select></div>'+
+    '<div class="span2"><label class="fl">Designation / title *</label><input id="p_des" value="'+v('des')+'" placeholder="Eg. Managing Director, CA, Dr., Advocate"/></div>'+
+    '<div class="span2"><label class="fl">Company / business name</label><input id="p_co" value="'+v('co')+'" placeholder="Eg. Mehta &amp; Associates, Apollo Clinic"/></div>'+
+    '<div class="span2"><label class="fl">Brief description of your work <span style="font-weight:400;color:#bbb;">(max 200 chars)</span></label><textarea id="p_wd" maxlength="200" rows="2" placeholder="What you do / what your company does...">'+v('wd')+'</textarea></div>'+
+    '<div class="span2"><label class="fl">What can you offer BBL members? <span style="font-weight:400;color:#bbb;">(max 200 chars)</span></label><textarea id="p_mo" maxlength="200" rows="2" placeholder="Eg. Free legal consult, investment advice, bulk discounts...">'+v('mo')+'</textarea></div>'+
+    '<div class="span2"><label class="fl">Open to being contacted for professional help?</label><select id="p_otc"><option value="">Select</option>'+makeOpts(['Yes — happy to help','Yes — specific queries only','Prefer not to'],p&&p.otc)+'</select></div>'+
+    '</div>';
+  var sec3='<div class="grid2">'+
+    '<div><label class="fl">LinkedIn URL <span style="font-weight:400;color:#bbb;">(optional)</span></label><input id="p_li" type="url" value="'+v('li')+'" placeholder="linkedin.com/in/..."/></div>'+
+    '<div><label class="fl">Business website <span style="font-weight:400;color:#bbb;">(optional)</span></label><input id="p_ws" type="url" value="'+v('ws')+'" placeholder="www.yoursite.com"/></div>'+
+    '<div class="span2"><label class="fl">Preferred contact method</label><div class="chk-row">'+cpOpts+'</div></div>'+
+    '</div>';
+  return '<p style="font-size:13px;color:#999;margin:0 0 16px;">Fields marked * are required. Visible only to verified BBL members.</p>'+
+    secCard(0,sec0)+secCard(1,sec1)+secCard(2,sec2)+secCard(3,sec3)+
+    '<button class="btn btn-green btn-lg" style="margin-top:6px;" onclick="doSave()">Save Profile</button>';
+}
+
+async function doSave(){
+  var fn=gv('p_fn'),mob=gv('p_mob'),des=gv('p_des');
+  if(!fn||!mob||!des)return toast('Name, Mobile and Designation are required','err');
+  var ptBoxes=document.querySelectorAll('.ptc:checked');
+  var pt=[];
+  for(var i=0;i<ptBoxes.length;i++)pt.push(ptBoxes[i].value);
+  var cpEl=document.querySelector('input[name="p_cp"]:checked');
+  db.members[user.id].profile={fn:fn,ag:gv('p_ag'),loc:gv('p_loc'),mob:mob,eml:gv('p_eml'),wa:gv('p_wa'),yp:gv('p_yp'),sl:gv('p_sl'),pf:gv('p_pf'),hc:gv('p_hc'),pt:pt.join(', '),pty:gv('p_pty'),ind:gv('p_ind'),des:des,co:gv('p_co'),wd:gv('p_wd'),mo:gv('p_mo'),otc:gv('p_otc'),li:gv('p_li'),ws:gv('p_ws'),cp:cpEl?cpEl.value:'',updatedAt:new Date().toISOString()};
+  _saving=true;
+  if(await dbSave()){_saving=false;toast('Profile saved successfully!');}
+  else{_saving=false;}
+}
+
+// ── Member Directory ─────────────────────────────────────────
+function filterMembers(all){
+  return all.filter(function(e){
+    var m=e[1];
+    if(!srch)return true;
+    var q=srch.toLowerCase(),p=m.profile;
+    var fields=['fn','des','co','ind','mo','loc'];
+    for(var i=0;i<fields.length;i++){
+      if((p[fields[i]]||'').toLowerCase().indexOf(q)>=0)return true;
+    }
+    return false;
+  });
+}
+
+function renderMemberCards(fil){
+  if(!fil.length)return '<div style="text-align:center;padding:3rem;color:#ccc;font-size:14px;">No members found</div>';
+  return fil.map(function(e){return mCard(e[0],e[1]);}).join('');
+}
+
+function tDir(){
+  var all=Object.entries(db.members).filter(function(e){return e[1].profile&&e[1].profile.fn;});
+  var indsMap={};
+  all.forEach(function(e){if(e[1].profile.ind)indsMap[e[1].profile.ind]=1;});
+  var inds=Object.keys(indsMap).sort();
+  var fil=filterMembers(all);
+  var indOpts=inds.map(function(i){return '<option value="'+esc(i)+'"'+(srch===i?' selected':'')+'>'+esc(i)+'</option>';}).join('');
+  return '<div>'+
+    '<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">'+
+    '<input placeholder="Search name, company, profession, expertise..." value="'+esc(srch)+'" oninput="srch=this.value;updateDir()" style="flex:1;min-width:200px;"/>'+
+    '<select onchange="srch=this.value;updateDir()" style="min-width:160px;width:auto;"><option value="">All industries</option>'+indOpts+'</select></div>'+
+    '<p style="font-size:12px;color:#aaa;margin:0 0 12px;" id="dcount">'+fil.length+' member'+(fil.length!==1?'s':'')+' with profiles</p>'+
+    '<div id="dresults">'+renderMemberCards(fil)+'</div></div>';
+}
+
+function updateDir(){
+  var all=Object.entries(db.members).filter(function(e){return e[1].profile&&e[1].profile.fn;});
+  var fil=filterMembers(all);
+  var r=document.getElementById('dresults');
+  var c=document.getElementById('dcount');
+  if(r)r.innerHTML=renderMemberCards(fil);
+  if(c)c.textContent=fil.length+' member'+(fil.length!==1?'s':'')+' with profiles';
+}
+
+function mCard(id,m){
+  var p=m.profile,pl=pal(id);
+  var ind=p.ind?'<span class="badge" style="background:'+pl.bg+';color:'+pl.txt+';border:1.5px solid '+pl.bdr+';">'+esc(p.ind)+'</span>':'';
+  var offers=p.mo?'<div style="background:#f5f7fb;border-left:4px solid '+pl.bdr+';padding:7px 11px;border-radius:0 7px 7px 0;margin-bottom:8px;font-size:12px;color:#444;"><span style="font-weight:800;color:'+pl.txt+';">Offers: </span>'+esc(p.mo)+'</div>':'';
+  var contacts='';
+  if(p.mob)contacts+='<span style="font-size:12px;color:#666;">&#128222; '+esc(p.mob)+'</span>';
+  if(p.eml)contacts+='<span style="font-size:12px;color:#666;">&#9993; '+esc(p.eml)+'</span>';
+  if(p.loc)contacts+='<span style="font-size:12px;color:#666;">&#128205; '+esc(p.loc)+'</span>';
+  return '<div class="member-card" onclick="showProfile(\''+id+'\')" style="cursor:pointer;">'+
+    '<div class="av" style="width:46px;height:46px;font-size:14px;background:'+pl.bg+';color:'+pl.txt+';border:2.5px solid '+pl.bdr+';">'+initials(p.fn)+'</div>'+
+    '<div style="flex:1;min-width:0;">'+
+    '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:4px;">'+
+    '<p style="font-size:15px;font-weight:800;color:#185FA5;text-decoration:underline;text-underline-offset:3px;">'+esc(p.fn)+'</p>'+ind+'</div>'+
+    '<p style="font-size:13px;color:#555;margin-bottom:7px;">'+esc(p.des)+(p.co?' &middot; <strong>'+esc(p.co)+'</strong>':'')+'</p>'+
+    offers+
+    '<div style="display:flex;flex-wrap:wrap;gap:12px;">'+contacts+'</div></div></div>';
+}
+
+function showProfile(id){
+  var m=db.members[id];
+  if(!m||!m.profile)return;
+  var p=m.profile,pl=pal(id);
+
+  function row(label,val){
+    if(!val)return '';
+    return '<div style="padding:10px 0;border-bottom:1px solid #f0f2f7;">'+
+      '<p style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">'+label+'</p>'+
+      '<p style="font-size:14px;color:#1a1a2e;font-weight:500;">'+esc(val)+'</p></div>';
+  }
+
+  var linksHtml='';
+  if(p.li)linksHtml+='<a href="'+esc(p.li)+'" target="_blank" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#185FA5;text-decoration:none;padding:8px 14px;border:1.5px solid #185FA5;border-radius:8px;margin-right:8px;margin-top:8px;">&#128279; LinkedIn</a>';
+  if(p.ws)linksHtml+='<a href="'+esc(p.ws)+'" target="_blank" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#27500A;text-decoration:none;padding:8px 14px;border:1.5px solid #27500A;border-radius:8px;margin-top:8px;">&#127760; Website</a>';
+
+  var html=
+    '<div id="profileModal" onclick="closeProfileModal(event)" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;">'+
+    '<div onclick="event.stopPropagation()" style="background:#fff;border-radius:16px;width:100%;max-width:520px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.2);margin:auto;">'+
+
+    // Header
+    '<div style="background:linear-gradient(135deg,'+pl.bg+',#fff);border-bottom:2px solid '+pl.bdr+';padding:24px 24px 20px;">'+
+    '<div style="display:flex;align-items:center;gap:16px;">'+
+    '<div class="av" style="width:64px;height:64px;font-size:22px;background:'+pl.bg+';color:'+pl.txt+';border:3px solid '+pl.bdr+';flex-shrink:0;">'+initials(p.fn)+'</div>'+
+    '<div style="flex:1;min-width:0;">'+
+    '<p style="font-size:20px;font-weight:900;color:#1a1a2e;margin-bottom:3px;">'+esc(p.fn)+'</p>'+
+    '<p style="font-size:13px;color:#555;margin-bottom:6px;">'+esc(p.des)+(p.co?' &middot; <strong>'+esc(p.co)+'</strong>':'')+'</p>'+
+    (p.ind?'<span class="badge" style="background:'+pl.bg+';color:'+pl.txt+';border:1.5px solid '+pl.bdr+';">'+esc(p.ind)+'</span>':'')+
+    '</div></div></div>'+
+
+    // Body
+    '<div style="padding:20px 24px;">'+
+
+    // Contact
+    '<p style="font-size:12px;font-weight:800;color:'+pl.txt+';text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">&#128100; Personal</p>'+
+    row('Mobile',p.mob)+
+    (p.wa&&p.wa!==p.mob?row('WhatsApp',p.wa):'')+
+    row('Email',p.eml)+
+    row('Location',p.loc)+
+    row('Age Group',p.ag)+
+    row('Preferred Contact',p.cp)+
+
+    // Badminton
+    '<p style="font-size:12px;font-weight:800;color:'+pl.txt+';text-transform:uppercase;letter-spacing:.06em;margin:16px 0 8px;">&#127992; Badminton</p>'+
+    row('Skill Level',p.sl)+
+    row('Playing Since',p.yp)+
+    row('Frequency',p.pf)+
+    row('Preferred Times',p.pt)+
+    row('Home Court / Club',p.hc)+
+
+    // Professional
+    '<p style="font-size:12px;font-weight:800;color:'+pl.txt+';text-transform:uppercase;letter-spacing:.06em;margin:16px 0 8px;">&#128188; Professional</p>'+
+    row('Profession Type',p.pty)+
+    row('Company',p.co)+
+    row('About Work',p.wd)+
+    row('Open to Contact',p.otc)+
+
+    // Offers
+    (p.mo?'<div style="background:'+pl.bg+';border-left:4px solid '+pl.bdr+';padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0;">'+
+    '<p style="font-size:11px;font-weight:800;color:'+pl.txt+';text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Offers to BBL Members</p>'+
+    '<p style="font-size:14px;color:#333;">'+esc(p.mo)+'</p></div>':'')+
+
+    // Links
+    (linksHtml?'<div style="margin-top:4px;">'+linksHtml+'</div>':'')+
+
+    // Close button
+    '<button onclick="closeProfileModal()" class="btn btn-ghost" style="width:100%;margin-top:20px;">Close</button>'+
+    '</div></div></div>';
+
+  var el=document.createElement('div');
+  el.id='profileModalWrap';
+  el.innerHTML=html;
+  document.body.appendChild(el);
+  document.body.style.overflow='hidden';
+}
+
+function closeProfileModal(e){
+  if(e&&e.target.id!=='profileModal'&&e.type==='click')return;
+  var el=document.getElementById('profileModalWrap');
+  if(el)el.remove();
+  document.body.style.overflow='';
+}
+
+// ── Admin dashboard ──────────────────────────────────────────
+function tAdmin(){
+  var all=Object.entries(db.members);
+  var withP=all.filter(function(e){return e[1].profile;});
+  var fil=all.filter(function(e){
+    var id=e[0],m=e[1];
+    if(!asrch)return true;
+    var q=asrch.toLowerCase(),p=m.profile||{};
+    var vals=[id,m.name,p.co,p.ind,p.des];
+    for(var i=0;i<vals.length;i++){if((vals[i]||'').toLowerCase().indexOf(q)>=0)return true;}
+    return false;
+  });
+  var stats=[
+    {bg:'#E6F1FB',bdr:'#185FA5',txt:'#0C447C',v:all.length,lbl:'Total members',cls:'_stat_total'},
+    {bg:'#EAF3DE',bdr:'#3B6D11',txt:'#27500A',v:withP.length,lbl:'Profiles filled',cls:'_stat_fill'},
+    {bg:'#FAEEDA',bdr:'#854F0B',txt:'#633806',v:all.length-withP.length,lbl:'Pending',cls:'_stat_pend'}
+  ];
+  var statHtml=stats.map(function(s){
+    return '<div class="stat-box" style="background:'+s.bg+';border:2px solid '+s.bdr+';">'+
+      '<p style="font-size:12px;font-weight:700;color:'+s.txt+';margin-bottom:7px;">'+s.lbl+'</p>'+
+      '<p class="'+s.cls+'" style="font-size:34px;font-weight:900;color:'+s.txt+';line-height:1;">'+s.v+'</p></div>';
+  }).join('');
+
+  return '<div style="max-width:900px;margin:0 auto;padding:1rem 0 3rem;">'+
+    '<div class="topbar">'+
+    '<div style="display:flex;align-items:center;gap:12px;">'+
+    '<div style="width:60px;height:45px;background:linear-gradient(135deg,#185FA5,#27500A);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">'+
+    '<span style="color:white;font-weight:900;font-size:14px;font-family:Arial,sans-serif;">BBL</span></div>'+
+    '<div style="flex:1;min-width:0;">'+
+    '<p style="font-size:15px;font-weight:900;color:#1a1a2e;">Admin Dashboard</p>'+
+    '<p style="font-size:11px;color:#aaa;margin-top:1px;">BBL Business Syndicate</p></div></div>'+
+    '<button class="btn btn-ghost btn-sm" onclick="screen=\'login\';user=null;render();">Sign Out</button></div>'+
+    savedStrip()+
+    '<div class="grid3" style="margin-bottom:16px;">'+statHtml+'</div>'+
+    '<div class="grid3" style="margin-bottom:16px;">'+
+    '<div class="card">'+
+    '<p style="font-size:13px;font-weight:800;margin-bottom:10px;color:#1a1a2e;">Club registration code</p>'+
+    '<div style="display:flex;gap:8px;"><input id="acode" value="'+esc(db.clubCode)+'" style="font-family:monospace;font-weight:700;"/><button class="btn btn-blue btn-sm" onclick="doCode()">Update</button></div>'+
+    '<p style="font-size:11px;color:#bbb;margin-top:8px;">Share only with new members. Change periodically.</p></div>'+
+    '<div class="card">'+
+    '<p style="font-size:13px;font-weight:800;margin-bottom:10px;color:#1a1a2e;">Admin password</p>'+
+    '<div style="display:flex;gap:8px;"><input id="apass" type="password" placeholder="New password (min 6 chars)"/><button class="btn btn-blue btn-sm" onclick="doPass()">Update</button></div>'+
+    '<p style="font-size:11px;color:#bbb;margin-top:8px;">Change your admin login password here.</p></div>'+
+    '<div class="card">'+
+    '<p style="font-size:13px;font-weight:800;margin-bottom:10px;color:#1a1a2e;">Data Backup &amp; Restore</p>'+
+    '<div style="display:flex;gap:8px;"><button class="btn btn-orange btn-sm" onclick="doExport()">&#11015; Backup</button><button class="btn btn-orange btn-sm" onclick="triggerImport()">&#11014; Restore</button></div>'+
+    '<p style="font-size:11px;color:#bbb;margin-top:8px;line-height:1.3;">Data lives in Firebase cloud — backup regularly as a safety copy.</p></div>'+
+    '</div>'+
+    '<div class="card">'+
+    '<div style="margin-bottom:16px;">'+
+    '<p style="font-size:15px;font-weight:800;margin:0 0 12px;color:#1a1a2e;">All members (<span class="_mc_total">'+all.length+'</span>)</p>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;">'+
+    '<input placeholder="Search members..." value="'+esc(asrch)+'" oninput="asrch=this.value;updAdmin()" style="flex:1;min-width:200px;"/>'+
+    '<button class="btn btn-ghost btn-sm" onclick="exportCSV()">&#11015; CSV</button></div></div>'+
+    '<div id="amobile">'+admCardRows(fil)+'</div>'+
+    '<div style="overflow-x:auto;display:none;" id="atable"><table style="width:100%;border-collapse:collapse;font-size:13px;min-width:600px;">'+
+    '<thead><tr style="background:#f5f7fb;">'+
+    ['Name','Member ID','Designation','Company','Industry','Status',''].map(function(h){return '<th style="text-align:left;padding:10px 12px;font-weight:800;color:#555;font-size:11px;border-bottom:2px solid #eee;text-transform:uppercase;letter-spacing:.05em;">'+h+'</th>';}).join('')+
+    '</tr></thead><tbody id="atbody">'+admRows(fil)+'</tbody></table></div></div></div>';
+}
+
+function admCardRows(fil){
+  if(!fil.length)return '<div style="text-align:center;padding:3rem;color:#ccc;font-size:14px;">No members found</div>';
+  return fil.map(function(e){
+    var id=e[0],m=e[1],p=m.profile||{},pl=pal(id);
+    var indBadge=p.ind?'<span class="badge" style="background:'+pl.bg+';color:'+pl.txt+';border:1.5px solid '+pl.bdr+';">'+esc(p.ind)+'</span>':'<span style="font-size:12px;color:#ccc;">No industry</span>';
+    var status=m.profile?'<span style="font-size:12px;font-weight:800;color:#3B6D11;">&#10003; Profile Complete</span>':'<span style="font-size:12px;font-weight:700;color:#bbb;">Profile Pending</span>';
+    var company=p.co?'<div style="font-size:12px;color:#666;margin-top:2px;"><strong>Company:</strong> '+esc(p.co)+'</div>':'';
+    var designation=p.des?'<div style="font-size:12px;color:#666;"><strong>Role:</strong> '+esc(p.des)+'</div>':'';
+    return '<div class="admin-member-card">'+
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">'+
+      '<div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">'+
+      '<div class="av" style="width:36px;height:36px;font-size:12px;background:'+pl.bg+';color:'+pl.txt+';border:1.5px solid '+pl.bdr+';">'+initials(m.name)+'</div>'+
+      '<div style="flex:1;min-width:0;"><p style="font-size:14px;font-weight:800;color:#1a1a2e;margin-bottom:2px;">'+esc(m.name)+'</p>'+
+      '<p style="font-size:11px;color:#aaa;font-family:monospace;">'+esc(id)+'</p></div></div>'+
+      '<button class="btn btn-red btn-sm" onclick="doRemove(\''+id+'\')">Remove</button></div>'+
+      '<div style="margin-bottom:8px;">'+indBadge+'</div>'+designation+company+
+      '<div style="margin-top:8px;padding-top:8px;border-top:1px solid #f0f0f0;">'+status+'</div></div>';
+  }).join('');
+}
+
+function admRows(fil){
+  if(!fil.length)return '<tr><td colspan="7" style="text-align:center;padding:2.5rem;color:#ccc;font-size:14px;">No members found</td></tr>';
+  return fil.map(function(e){
+    var id=e[0],m=e[1],p=m.profile||{},pl=pal(id);
+    var indBadge=p.ind?'<span class="badge" style="background:'+pl.bg+';color:'+pl.txt+';">'+esc(p.ind)+'</span>':'&mdash;';
+    var status=m.profile?'<span style="font-size:12px;font-weight:800;color:#3B6D11;">&#10003; Filled</span>':'<span style="font-size:12px;font-weight:700;color:#bbb;">Pending</span>';
+    return '<tr style="border-bottom:1px solid #f2f4f8;">'+
+      '<td style="padding:11px 12px;"><div style="display:flex;align-items:center;gap:9px;">'+
+      '<div class="av" style="width:32px;height:32px;font-size:11px;background:'+pl.bg+';color:'+pl.txt+';border:1.5px solid '+pl.bdr+';">'+initials(m.name)+'</div>'+
+      '<span style="font-weight:700;">'+esc(m.name)+'</span></div></td>'+
+      '<td style="padding:11px 12px;font-family:monospace;font-size:11px;color:#aaa;">'+esc(id)+'</td>'+
+      '<td style="padding:11px 12px;">'+esc(p.des||'—')+'</td>'+
+      '<td style="padding:11px 12px;">'+esc(p.co||'—')+'</td>'+
+      '<td style="padding:11px 12px;">'+indBadge+'</td>'+
+      '<td style="padding:11px 12px;">'+status+'</td>'+
+      '<td style="padding:11px 12px;"><button class="btn btn-red btn-sm" onclick="doRemove(\''+id+'\')">Remove</button></td></tr>';
+  }).join('');
+}
+
+function updAdmin(){
+  var all=Object.entries(db.members);
+  var fil=all.filter(function(e){
+    var id=e[0],m=e[1];
+    if(!asrch)return true;
+    var q=asrch.toLowerCase(),p=m.profile||{};
+    var vals=[id,m.name,p.co,p.ind,p.des];
+    for(var i=0;i<vals.length;i++){if((vals[i]||'').toLowerCase().indexOf(q)>=0)return true;}
+    return false;
+  });
+  var tb=document.getElementById('atbody');
+  var mb=document.getElementById('amobile');
+  if(tb)tb.innerHTML=admRows(fil);
+  if(mb)mb.innerHTML=admCardRows(fil);
+}
+
+async function doCode(){
+  var c=gv('acode');
+  if(!c||c.length<4)return toast('Code must be at least 4 characters','err');
+  db.clubCode=c;
+  _saving=true;
+  if(await dbSave()){_saving=false;toast('Registration code updated!');}
+  else{_saving=false;}
+}
+
+async function doPass(){
+  var p=gv('apass');
+  if(!p||p.length<6)return toast('Password must be at least 6 characters','err');
+  db.adminPass=p;
+  _saving=true;
+  if(await dbSave()){_saving=false;toast('Admin password updated!');render();}
+  else{_saving=false;}
+}
+
+async function doRemove(id){
+  if(!confirm('Remove member "'+id+'"? This cannot be undone.'))return;
+  delete db.members[id];
+  _saving=true;
+  if(await dbSave()){_saving=false;toast('Member removed.');render();}
+  else{_saving=false;}
+}
+
+// ── Backup / Restore ─────────────────────────────────────────
+function doExport(){
+  try{
+    var memberCount=Object.keys(db.members).length;
+    var exportData={version:'2.0',timestamp:new Date().toISOString(),memberCount:memberCount,exportedBy:'Admin',data:db};
+    var blob=new Blob([JSON.stringify(exportData,null,2)],{type:'application/json'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    var dateStr=new Date().toISOString().slice(0,10);
+    a.href=url;a.download='BBL_Directory_Backup_'+dateStr+'_'+memberCount+'members.json';a.click();
+    URL.revokeObjectURL(url);
+    toast('Backup downloaded!','ok');
+  }catch(e){toast('Export failed: '+e.message,'err');}
+}
+
+function triggerImport(){document.getElementById('fileInput').click();}
+
+function doImport(){
+  var fileInput=document.getElementById('fileInput');
+  if(!fileInput.files||!fileInput.files[0])return;
+  var file=fileInput.files[0];
+  var reader=new FileReader();
+  reader.onload=async function(e){
+    try{
+      var importData=JSON.parse(e.target.result);
+      if(!importData.data||typeof importData.data!=='object')return toast('Invalid file format','err');
+      var newCount=Object.keys(importData.data.members||{}).length;
+      var curCount=Object.keys(db.members).length;
+      var msg='Import '+newCount+' members (you currently have '+curCount+')?';
+      if(importData.timestamp)msg='Import directory from '+new Date(importData.timestamp).toLocaleDateString()+' ('+newCount+' members)?';
+      if(!confirm(msg+' This will replace current data.'))return;
+      db=importData.data;
+      _saving=true;
+      if(await dbSave()){_saving=false;toast('Directory restored — '+newCount+' members.','ok');render();}
+      else{_saving=false;}
+    }catch(err){toast('Import failed: invalid file','err');}
+  };
+  reader.readAsText(file);
+  fileInput.value='';
+}
+
+function exportCSV(){
+  var all=Object.entries(db.members);
+  if(!all.length)return toast('No members to export','err');
+  var headers=['Member ID','Name','Mobile','Email','Location','Age Group','Designation','Company','Industry','Profession Type','Playing Since','Skill Level','Frequency','Preferred Time','What They Offer','Open to Contact','LinkedIn','Website','Joined'];
+  var rows=all.map(function(e){
+    var id=e[0],m=e[1],p=m.profile||{};
+    return [id,m.name,p.mob,p.eml,p.loc,p.ag,p.des,p.co,p.ind,p.pty,p.yp,p.sl,p.pf,p.pt,p.mo,p.otc,p.li,p.ws,(m.joinedAt||'').slice(0,10)].map(function(v){return '"'+(v||'').replace(/"/g,'""')+'"';}).join(',');
+  });
+  var blob=new Blob([headers.join(',')+'\n'+rows.join('\n')],{type:'text/csv'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.download='BBL_Members.csv';a.click();
+  URL.revokeObjectURL(url);
+  toast('CSV downloaded!');
+}
+
+// ── Start ────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
